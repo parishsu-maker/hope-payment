@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>元木運動行銷 — 請款單</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ac:#1a4a2e;--r:6px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh;padding:2rem 1rem 4rem;}
+.wrap{max-width:860px;margin:0 auto;}
+.ph{text-align:center;margin-bottom:2rem;}
+.ph .co{font-family:'Noto Serif TC',serif;font-size:1.6rem;font-weight:600;letter-spacing:.12em;}
+.ph .dt{font-size:.95rem;letter-spacing:.4em;color:#4a4a45;margin-top:.3rem;}
+.ph .hl{width:40px;height:2px;background:#1a4a2e;margin:.7rem auto 0;}
+.card{background:#fff;border:1px solid #d4d0c8;border-radius:10px;overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,.06);}
+.sec-head{font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:#1a4a2e;padding:.6rem 1.6rem;}
+.sec-body{padding:1.4rem 1.6rem;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.2rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem 1.2rem;}
+.s2{grid-column:span 2;}
+.fl{display:flex;flex-direction:column;gap:.3rem;}
+.fl label{font-size:.74rem;font-weight:500;color:#4a4a45;}
+.req{color:#c0392b;margin-left:2px;}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;padding:.5rem .75rem;border:1px solid #d4d0c8;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:.88rem;color:#1a1a18;background:#fff;outline:none;appearance:none;transition:border-color .12s,box-shadow .12s;}
+input:focus,select:focus,textarea:focus{border-color:#1a4a2e;box-shadow:0 0 0 3px rgba(26,74,46,.1);}
+input::placeholder,textarea::placeholder{color:rgba(140,138,130,0.45);}
+textarea{resize:vertical;min-height:70px;line-height:1.6;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a8a82' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2.2rem;cursor:pointer;}
+.av{padding:.5rem .75rem;border:1px solid #eceae4;border-radius:var(--r);font-size:.88rem;color:#8a8a82;background:#faf9f6;min-height:36px;}
+.av.filled{color:#1a1a18;font-weight:500;}
+.badge{display:inline-block;font-size:.62rem;background:#e8f0eb;color:#1a4a2e;border-radius:3px;padding:1px 5px;margin-left:3px;font-weight:500;vertical-align:middle;}
+.pt-group{display:flex;gap:.5rem;flex-wrap:wrap;padding:.3rem 0;}
+.pt-item{position:relative;}
+.pt-item input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
+.pt-item label{display:inline-block;padding:.38rem .95rem;border:1px solid #d4d0c8;border-radius:20px;font-size:.84rem;color:#4a4a45;cursor:pointer;transition:background .12s,border-color .12s,color .12s;user-select:none;}
+.pt-item input[type=radio]:checked+label{background:#1a4a2e;border-color:#1a4a2e;color:#fff;font-weight:500;}
+.pm-box{border:1px solid #d4d0c8;border-radius:var(--r);overflow:hidden;}
+.pm-tabs{display:flex;border-bottom:1px solid #d4d0c8;}
+.pm-tab{flex:1;padding:.5rem .3rem;text-align:center;font-size:.8rem;cursor:pointer;color:#4a4a45;background:#faf9f6;transition:background .12s,color .12s;user-select:none;border:none;font-family:'Noto Sans TC',sans-serif;border-right:1px solid #d4d0c8;}
+.pm-tab:last-child{border-right:none;}
+.pm-tab.active{background:#1a4a2e;color:#fff;font-weight:500;}
+.pm-body{padding:1rem;}
+.pm-section{display:none;}
+.pm-section.show{display:block;}
+.pm-cash-row{display:flex;align-items:center;gap:.6rem;color:#4a4a45;font-size:.88rem;}
+.pm-cash-icon{width:32px;height:32px;background:#e8f0eb;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hn-info{background:#faf9f6;border:1px solid #eceae4;border-radius:var(--r);padding:.7rem 1rem;font-size:.85rem;color:#4a4a45;line-height:1.75;}
+.hn-info strong{color:#1a1a18;font-weight:500;}
+.er-row{display:none;margin-top:.8rem;}
+.er-row.show{display:grid;}
+.inv-toggle{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;cursor:pointer;font-size:.82rem;color:#4a4a45;}
+.inv-toggle input[type=checkbox]{width:15px;height:15px;border:1px solid #d4d0c8;border-radius:3px;appearance:none;background:#fff;cursor:pointer;transition:background .1s;position:relative;flex-shrink:0;}
+.inv-toggle input[type=checkbox]:checked{background:#1a4a2e;border-color:#1a4a2e;}
+.inv-toggle input[type=checkbox]:checked::after{content:'';position:absolute;top:1px;left:4px;width:5px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg);}
+#inv-f{display:none;}#inv-f.show{display:grid;}
+.invalid input,.invalid select,.invalid textarea{border-color:#c0392b!important;box-shadow:0 0 0 3px rgba(192,57,43,.1)!important;}
+.fe{font-size:.72rem;color:#c0392b;display:none;margin-top:2px;}
+.invalid .fe{display:block;}
+.ff{padding:1.2rem 1.6rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid #eceae4;}
+.fn{font-size:.74rem;color:#8a8a82;line-height:1.6;}
+.bs{padding:.65rem 2rem;background:#1a4a2e;color:#fff;border:none;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:.92rem;font-weight:500;letter-spacing:.04em;cursor:pointer;transition:background .12s;}
+.bs:hover{background:#133d24;}
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(10,10,8,.5);z-index:100;align-items:center;justify-content:center;padding:1rem;}
+.modal-bg.show{display:flex;}
+.modal{background:#fff;border-radius:10px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.modal-head{background:#1a4a2e;color:#fff;padding:.8rem 1.6rem;font-size:.9rem;font-weight:500;border-radius:10px 10px 0 0;}
+.modal-body{padding:1.4rem 1.6rem;}
+.ptbl{width:100%;border-collapse:collapse;font-size:.84rem;}
+.ptbl td{padding:.45rem .55rem;border-bottom:1px solid #eceae4;vertical-align:top;}
+.ptbl td:first-child{width:110px;color:#8a8a82;font-size:.76rem;white-space:nowrap;}
+.ma{margin-top:1.2rem;display:flex;gap:.7rem;justify-content:flex-end;}
+.btn-back{padding:.55rem 1.2rem;border:1px solid #d4d0c8;border-radius:var(--r);background:#fff;color:#4a4a45;font-family:'Noto Sans TC',sans-serif;font-size:.86rem;cursor:pointer;}
+.btn-ok{padding:.55rem 1.6rem;background:#1a4a2e;color:#fff;border:none;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;}
+/* Success */
+.succ{display:none;text-align:center;padding:3rem 1rem;}
+.succ.show{display:block;}
+.si{width:56px;height:56px;background:#e8f0eb;border-radius:50%;margin:0 auto .9rem;display:flex;align-items:center;justify-content:center;}
+.st{font-family:'Noto Serif TC',serif;font-size:1.15rem;font-weight:600;color:#1a1a18;margin-bottom:.5rem;}
+.ss{font-size:.86rem;color:#4a4a45;line-height:1.75;}
+@media(max-width:600px){
+  .sec-body{padding:1rem 1rem;}
+  .g2,.g3{grid-template-columns:1fr;}
+  .s2{grid-column:span 1;}
+  .ff{flex-direction:column;}
+  .bs{width:100%;text-align:center;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="ph">
+  <div class="co">元木運動行銷有限公司</div>
+  <div class="dt">請 款 單</div>
+  <div class="hl"></div>
+</div>
+
+<div class="card" id="form-card">
+
+  <div class="sec-head">基本資訊</div>
+  <div class="sec-body">
+    <div class="g2" style="margin-bottom:.8rem;">
+      <div class="fl"><label>單號 <span class="badge">自動</span></label><div class="av" id="doc-no">—</div></div>
+      <div class="fl"><label>請款日期 <span class="badge">自動</span></label><div class="av" id="doc-dt">—</div></div>
+    </div>
+    <div class="g3">
+      <div class="fl">
+        <label>公司部門 <span class="req">*</span></label>
+        <select id="cc" onchange="togDeptOther(this.value)">
+          <option value="">— 請選擇部門 —</option>
+          <option value="商品部">商品部</option>
+          <option value="教練課程部">教練課程部</option>
+          <option value="行銷部">行銷部</option>
+          <option value="營運管理">營運管理</option>
+          <option value="其他">其他</option>
+        </select>
+        <div class="fe">請選擇公司部門</div>
+      </div>
+      <div class="fl" id="dept-other-field" style="display:none;">
+        <label>部門名稱</label>
+        <input type="text" id="dept-other" placeholder="請輸入部門名稱">
+      </div>
+      <div class="fl"><label>請款類別</label><input type="text" id="rt" placeholder="例：教練費、場地費、採購"></div>
+      <div class="fl"><label>申請人 <span class="req">*</span></label><input type="text" id="applicant" placeholder="例：王小明"><div class="fe">請填寫申請人姓名</div></div>
+    </div>
+  </div>
+
+  <div class="sec-head">廠商 / 收款人</div>
+  <div class="sec-body">
+    <div class="g2">
+      <div class="fl s2"><label>廠商全名 <span class="req">*</span></label><input type="text" id="vd"><div class="fe">請填寫廠商全名</div></div>
+      <div class="fl s2">
+        <label>付款類別 <span class="req">*</span></label>
+        <div class="pt-group">
+          <div class="pt-item"><input type="radio" name="pt" id="pt1" value="付廠商"><label for="pt1">付廠商</label></div>
+          <div class="pt-item"><input type="radio" name="pt" id="pt2" value="付申請人"><label for="pt2">付申請人</label></div>
+          <div class="pt-item"><input type="radio" name="pt" id="pt3" value="其他"><label for="pt3">其他</label></div>
+        </div>
+      </div>
+      <div class="fl s2">
+        <label>收款方式 <span class="req">*</span></label>
+        <div class="pm-box">
+          <div class="pm-tabs">
+            <button type="button" class="pm-tab active" id="tab-cash" onclick="setPM('cash')">現金</button>
+            <button type="button" class="pm-tab" id="tab-wire" onclick="setPM('wire')">匯款</button>
+            <button type="button" class="pm-tab" id="tab-hn" onclick="setPM('hn')">匯員工華南帳戶</button>
+          </div>
+          <div class="pm-body">
+            <div class="pm-section show" id="pm-cash">
+              <div class="pm-cash-row"><div class="pm-cash-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div><span>以現金付款，無需填寫帳戶資訊</span></div>
+            </div>
+            <div class="pm-section" id="pm-wire">
+              <div class="g2">
+                <div class="fl s2"><label>銀行名稱 <span class="req">*</span></label><select id="bk-name" onchange="onBankChange(this.value)"><option value="">— 請選擇銀行 —</option></select><div class="fe">請選擇銀行</div></div>
+                <div class="fl"><label>銀行代碼 <span class="badge">自動帶入</span></label><div class="av" id="bk-code">—</div></div>
+                <div class="fl"><label>分行名稱</label><input type="text" id="bk-branch" placeholder="例：太平分行"></div>
+                <div class="fl"><label>戶名 <span class="req">*</span></label><input type="text" id="bk-holder"><div class="fe">請填寫戶名</div></div>
+                <div class="fl"><label>銀行帳號 <span class="req">*</span></label><input type="text" id="bk-acct"><div class="fe">請填寫帳號</div></div>
+              </div>
+            </div>
+            <div class="pm-section" id="pm-hn">
+              <div class="hn-info"><strong>華南銀行（008）</strong>員工薪轉帳戶<br>帳號資料已存於系統，匯款時將自動帶入員工對應帳號。<br><span style="font-size:.78rem;color:#8a8a82;">如帳號有變更請聯絡財務人員更新。</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-head">付款內容</div>
+  <div class="sec-body">
+    <div class="g2">
+      <div class="fl s2"><label>付款內容說明 <span class="req">*</span></label><textarea id="ct" placeholder="例：【原子練球成人團體班 19:00】5/6、5/20" rows="3"></textarea><div class="fe">請填寫付款內容</div></div>
+      <div class="fl"><label>小寫金額 <span class="req">*</span></label><input type="number" id="amt" placeholder="0" min="0"><div class="fe">請填寫金額</div></div>
+      <div class="fl"><label>大寫金額 <span class="badge">自動換算</span></label><div class="av" id="amt-k" style="font-size:.85rem;letter-spacing:.04em;">—</div></div>
+      <div class="fl"><label>付款幣別</label><select id="cur" onchange="onCurChange(this.value)"><option value="NTD">新台幣（NTD）</option><option value="USD">美元（USD）</option><option value="JPY">日圓（JPY）</option><option value="CNY">人民幣（CNY）</option><option value="OTHER">其他</option></select></div>
+      <div class="fl"><label>應付日期</label><input type="date" id="dd"></div>
+      <div class="g2 er-row s2" id="er-row">
+        <div class="fl"><label>匯率（對新台幣）</label><input type="number" id="er" placeholder="例：0.22" step="0.0001" min="0"></div>
+        <div class="fl"><label>折合新台幣 <span class="badge">自動計算</span></label><div class="av" id="ntd-eq">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-head">發票 / 備註</div>
+  <div class="sec-body">
+    <label class="inv-toggle"><input type="checkbox" id="hi" onchange="togInv(this.checked)"> 有發票資訊</label>
+    <div class="g2" id="inv-f">
+      <div class="fl"><label>發票日期</label><input type="date" id="id2"></div>
+      <div class="fl"><label>發票號碼</label><input type="text" id="in2" placeholder="例：AB-12345678"></div>
+    </div>
+    <div class="fl" style="margin-top:.6rem;"><label>備註</label><textarea id="nt" placeholder="其他補充說明" rows="2"></textarea></div>
+  </div>
+
+  <div class="ff">
+    <div class="fn">送出後系統將自動通知核准及經辦人進行線上簽核。</div>
+    <button type="button" class="bs" onclick="prev()">預覽並送出 →</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-head">確認請款單內容</div>
+    <div class="modal-body">
+      <table class="ptbl" id="ptbl"></table>
+      <div class="ma">
+        <button class="btn-back" onclick="clsModal()">返回修改</button>
+        <button class="btn-ok" onclick="doSubmit()">確認送出審核</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success -->
+<div class="succ" id="succ">
+  <div class="si"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+  <div class="st">請款單已送出</div>
+  <div class="ss">系統已自動通知核准及經辦人進行線上簽核。<br>簽核完成後您將收到 Email 通知。</div>
+  <button class="bs" style="margin-top:1.4rem;" onclick="resetForm()">填寫新的請款單</button>
+</div>
+</div>
+
+<script>
+const BANKS=[
+  {n:'台灣銀行',c:'004'},{n:'土地銀行',c:'005'},{n:'合作金庫',c:'006'},
+  {n:'第一銀行',c:'007'},{n:'華南銀行',c:'008'},{n:'彰化銀行',c:'009'},
+  {n:'上海銀行',c:'012'},{n:'國泰世華銀行',c:'013'},{n:'臺灣中小企銀',c:'050'},
+  {n:'渣打銀行',c:'052'},{n:'台中銀行',c:'053'},{n:'京城銀行',c:'054'},
+  {n:'匯豐銀行',c:'081'},{n:'花旗銀行',c:'083'},
+  {n:'板信商業銀行',c:'101'},{n:'三信商業銀行',c:'103'},
+  {n:'聯邦銀行',c:'803'},{n:'遠東銀行',c:'805'},{n:'元大銀行',c:'806'},
+  {n:'永豐銀行',c:'807'},{n:'玉山銀行',c:'808'},{n:'凱基銀行',c:'809'},
+  {n:'星展銀行',c:'810'},{n:'台新銀行',c:'812'},{n:'日盛銀行',c:'815'},
+  {n:'安泰銀行',c:'816'},{n:'中國信託',c:'822'},{n:'郵局（郵政劃撥）',c:'700'},
+  {n:'其他',c:''}
+];
+(function(){
+  const sel=document.getElementById('bk-name');
+  BANKS.forEach(b=>{const o=document.createElement('option');o.value=b.c;o.textContent=b.n+(b.c?` (${b.c})`:'');o.dataset.name=b.n;sel.appendChild(o);});
+  const now=new Date();const y=now.getFullYear()-1911;
+  const m=String(now.getMonth()+1).padStart(2,'0');const d=String(now.getDate()).padStart(2,'0');
+  document.getElementById('doc-dt').textContent=`${y} 年 ${m} 月 ${d} 日`;
+  document.getElementById('doc-no').textContent=`YM${y}${m}${d}-${String(Math.floor(Math.random()*900)+100)}`;
+})();
+function togDeptOther(v){document.getElementById('dept-other-field').style.display=(v==='其他')?'flex':'none';}
+function onBankChange(code){
+  const sel=document.getElementById('bk-name');const opt=sel.options[sel.selectedIndex];const el=document.getElementById('bk-code');
+  if(code){el.textContent=code;el.classList.add('filled');}
+  else if(opt.dataset.name==='其他'){el.textContent='請洽詢銀行';el.classList.remove('filled');}
+  else{el.textContent='—';el.classList.remove('filled');}
+}
+const CUR_LABELS={NTD:'新台幣（NTD）',USD:'美元（USD）',JPY:'日圓（JPY）',CNY:'人民幣（CNY）',OTHER:'其他'};
+function onCurChange(v){document.getElementById('er-row').classList.toggle('show',v!=='NTD');calcNTD();}
+function calcNTD(){
+  const amt=parseFloat(document.getElementById('amt').value)||0;
+  const er=parseFloat(document.getElementById('er').value)||0;
+  const cur=document.getElementById('cur').value;
+  document.getElementById('ntd-eq').textContent=(cur!=='NTD'&&amt&&er)?'NT$ '+Math.round(amt*er).toLocaleString():'—';
+}
+const DIG=['零','壹','貳','參','肆','伍','陸','柒','捌','玖'],UNITS=['','拾','佰','仟'],WANS=['','萬','億'];
+function toK(n){
+  if(!n||isNaN(n)||n<=0)return'—';n=Math.round(n);let r='',wi=0;
+  while(n>0){const c=n%10000;if(c!==0){let cs='',t=c;for(let i=0;i<4;i++){const d=t%10;if(d!==0)cs=DIG[d]+UNITS[i]+cs;else if(cs&&!cs.startsWith('零'))cs='零'+cs;t=Math.floor(t/10);}r=cs+WANS[wi]+r;}n=Math.floor(n/10000);wi++;}
+  return r.replace(/零+/g,'零').replace(/零$/,'')+' 元整';
+}
+document.getElementById('amt').addEventListener('input',function(){document.getElementById('amt-k').textContent=toK(this.value)||'—';calcNTD();});
+document.getElementById('er').addEventListener('input',calcNTD);
+let curPM='cash';
+function setPM(t){
+  curPM=t;
+  ['cash','wire','hn'].forEach(x=>{
+    document.getElementById(`tab-${x}`).classList.toggle('active',x===t);
+    document.getElementById(`pm-${x}`).classList.toggle('show',x===t);
+  });
+}
+function togInv(s){document.getElementById('inv-f').classList.toggle('show',s);}
+function getPT(){return document.querySelector('input[name="pt"]:checked')?.value||'—';}
+function getDept(){const v=document.getElementById('cc').value;if(v==='其他'){const o=document.getElementById('dept-other').value.trim();return o||'其他';}return v;}
+function vld(){
+  let ok=true;
+  const ccSel=document.getElementById('cc');const ccF=ccSel.closest('.fl');
+  if(!ccSel.value){ccF.classList.add('invalid');ok=false;}else ccF.classList.remove('invalid');
+  [['vd'],['ct'],['amt'],['applicant']].forEach(([id])=>{
+    const el=document.getElementById(id);const f=el.closest('.fl');
+    if(!el.value.trim()){f.classList.add('invalid');ok=false;}else f.classList.remove('invalid');
+    el.addEventListener('input',()=>f.classList.remove('invalid'),{once:true});
+  });
+  if(curPM==='wire'){
+    const bkSel=document.getElementById('bk-name');const bkF=bkSel.closest('.fl');
+    if(!bkSel.value){bkF.classList.add('invalid');ok=false;}else bkF.classList.remove('invalid');
+    ['bk-holder','bk-acct'].forEach(id=>{
+      const el=document.getElementById(id);const f=el.closest('.fl');
+      if(!el.value.trim()){f.classList.add('invalid');ok=false;}else f.classList.remove('invalid');
+      el.addEventListener('input',()=>f.classList.remove('invalid'),{once:true});
+    });
+  }
+  return ok;
+}
+function collect(){
+  let pmInfo='現金';
+  if(curPM==='wire'){
+    const sel=document.getElementById('bk-name');
+    const bkName=sel.options[sel.selectedIndex]?.dataset.name||'';
+    const code=document.getElementById('bk-code').textContent;
+    const bb=document.getElementById('bk-branch').value.trim();
+    const bh=document.getElementById('bk-holder').value.trim();
+    const ba=document.getElementById('bk-acct').value.trim();
+    const parts=[`銀行：${bkName}${code&&code!=='—'?` (${code})`:''}`];
+    if(bb)parts.push(`分行：${bb}`);if(bh)parts.push(`戶名：${bh}`);if(ba)parts.push(`帳號：${ba}`);
+    pmInfo='匯款　'+parts.join('　');
+  }else if(curPM==='hn'){pmInfo='匯員工華南帳戶（008）— 系統自動帶入';}
+  const curVal=document.getElementById('cur').value;
+  const erVal=document.getElementById('er').value;
+  const ntdVal=document.getElementById('ntd-eq').textContent;
+  const hasInv=document.getElementById('hi').checked;
+  return{
+    no:document.getElementById('doc-no').textContent,
+    dt:document.getElementById('doc-dt').textContent,
+    dept:getDept(),applicant:document.getElementById('applicant').value.trim(),
+    rt:document.getElementById('rt').value.trim(),
+    vd:document.getElementById('vd').value.trim(),pt:getPT(),pmInfo,
+    ct:document.getElementById('ct').value.trim(),
+    amt:document.getElementById('amt').value,amtK:document.getElementById('amt-k').textContent,
+    cur:CUR_LABELS[curVal]||curVal,
+    er:curVal!=='NTD'&&erVal?`${erVal}（折合 ${ntdVal}）`:'—',
+    dd:document.getElementById('dd').value,
+    id2:hasInv?document.getElementById('id2').value:'—',
+    in2:hasInv?document.getElementById('in2').value.trim():'—',
+    nt:document.getElementById('nt').value.trim()||'—',
+  };
+}
+function prev(){
+  if(!vld())return;
+  const d=collect();
+  const rows=[
+    ['單號',d.no],['請款日期',d.dt],
+    ['公司部門',d.dept],['申請人',d.applicant],['請款類別',d.rt||'—'],
+    ['廠商全名',d.vd],['付款類別',d.pt],['收款方式',d.pmInfo],
+    ['付款內容',d.ct],
+    ['小寫金額',`${Number(d.amt).toLocaleString()} ${d.cur}`],
+    ['大寫金額',d.amtK],['付款幣別',d.cur],['匯率',d.er],
+    ['應付日期',d.dd||'—'],['發票日期',d.id2],['發票號碼',d.in2],['備註',d.nt],
+  ];
+  document.getElementById('ptbl').innerHTML=rows.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  document.getElementById('modal').classList.add('show');
+}
+function clsModal(){document.getElementById('modal').classList.remove('show');}
+function doSubmit(){
+  clsModal();
+  document.getElementById('form-card').style.display='none';
+  document.getElementById('succ').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetForm(){
+  document.getElementById('succ').classList.remove('show');document.getElementById('form-card').style.display='';
+  document.querySelectorAll('input[type=text],input[type=number],input[type=date],textarea').forEach(e=>e.value='');
+  document.querySelectorAll('input[type=radio],input[type=checkbox]').forEach(e=>e.checked=false);
+  document.getElementById('cc').value='';document.getElementById('dept-other-field').style.display='none';
+  document.getElementById('amt-k').textContent='—';document.getElementById('ntd-eq').textContent='—';
+  document.getElementById('er-row').classList.remove('show');document.getElementById('cur').value='NTD';
+  document.getElementById('inv-f').classList.remove('show');
+  document.getElementById('bk-name').selectedIndex=0;document.getElementById('bk-code').textContent='—';
+  document.getElementById('bk-code').classList.remove('filled');setPM('cash');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
