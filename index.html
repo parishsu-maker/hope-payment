@@ -286,7 +286,7 @@ function togInv(s){document.getElementById('inv-f').classList.toggle('show',s);}
 function getPT(){return document.querySelector('input[name="pt"]:checked')?.value||'—';}
 function getDept(){const v=document.getElementById('cc').value;if(v==='其他'){const o=document.getElementById('dept-other').value.trim();return o||'其他';}return v;}
 // ── GAS 端點（部署後填入）──────────────────────────────────
-const GAS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxCjPLB6D7-xHwMH2jHSBAPvHt919RwBZnZYzRRjpep4pQmK0Hrwz33beb7_aVc233OdQ/exec';
 // ────────────────────────────────────────────────────────────
 
 function vld(){
@@ -365,17 +365,18 @@ async function doSubmit(){
   btnOk.disabled=true; btnOk.textContent='送出中...';
   try{
     const data=collect();
-    const res=await fetch(GAS_URL,{method:'POST',body:JSON.stringify(data)});
-    const result=await res.json();
-    if(result.success){
-      document.getElementById('form-card').style.display='none';
-      document.getElementById('succ').classList.add('show');
-      window.scrollTo({top:0,behavior:'smooth'});
-    } else {
-      alert('送出失敗，請稍後再試。');
-      btnOk.disabled=false; btnOk.textContent='確認送出審核';
-      document.getElementById('modal').classList.add('show');
-    }
+    // GAS 需要用 no-cors 模式，送出後直接顯示成功畫面
+    fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(data),
+    });
+    // no-cors 無法讀取回應，等 800ms 後直接顯示成功
+    await new Promise(r => setTimeout(r, 800));
+    document.getElementById('form-card').style.display='none';
+    document.getElementById('succ').classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
   } catch(err){
     alert('網路錯誤：'+err.message);
     btnOk.disabled=false; btnOk.textContent='確認送出審核';
