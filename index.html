@@ -125,6 +125,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       </div>
       <div class="fl"><label>請款類別</label><input type="text" id="rt" placeholder="例：教練費、場地費、採購"></div>
       <div class="fl"><label>申請人 <span class="req">*</span></label><input type="text" id="applicant" placeholder="例：王小明"><div class="fe">請填寫申請人姓名</div></div>
+      <div class="fl" style="grid-column:span 3;">
+        <label>申請人 Email <span class="req">*</span><span style="font-size:.68rem;color:#8a8a82;margin-left:4px;">（用於接收送出確認與簽核完成通知）</span></label>
+        <input type="text" id="applicant-email" placeholder="例：yourname@yuanmu.com">
+        <div class="fe">請填寫申請人 Email</div>
+      </div>
     </div>
   </div>
 
@@ -280,11 +285,15 @@ function setPM(t){
 function togInv(s){document.getElementById('inv-f').classList.toggle('show',s);}
 function getPT(){return document.querySelector('input[name="pt"]:checked')?.value||'—';}
 function getDept(){const v=document.getElementById('cc').value;if(v==='其他'){const o=document.getElementById('dept-other').value.trim();return o||'其他';}return v;}
+// ── GAS 端點（部署後填入）──────────────────────────────────
+const GAS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+// ────────────────────────────────────────────────────────────
+
 function vld(){
   let ok=true;
   const ccSel=document.getElementById('cc');const ccF=ccSel.closest('.fl');
   if(!ccSel.value){ccF.classList.add('invalid');ok=false;}else ccF.classList.remove('invalid');
-  [['vd'],['ct'],['amt'],['applicant']].forEach(([id])=>{
+  [['vd'],['ct'],['amt'],['applicant'],['applicant-email']].forEach(([id])=>{
     const el=document.getElementById(id);const f=el.closest('.fl');
     if(!el.value.trim()){f.classList.add('invalid');ok=false;}else f.classList.remove('invalid');
     el.addEventListener('input',()=>f.classList.remove('invalid'),{once:true});
@@ -321,6 +330,7 @@ function collect(){
     no:document.getElementById('doc-no').textContent,
     dt:document.getElementById('doc-dt').textContent,
     dept:getDept(),applicant:document.getElementById('applicant').value.trim(),
+    applicantEmail:document.getElementById('applicant-email').value.trim(),
     rt:document.getElementById('rt').value.trim(),
     vd:document.getElementById('vd').value.trim(),pt:getPT(),pmInfo,
     ct:document.getElementById('ct').value.trim(),
@@ -349,17 +359,35 @@ function prev(){
   document.getElementById('modal').classList.add('show');
 }
 function clsModal(){document.getElementById('modal').classList.remove('show');}
-function doSubmit(){
+async function doSubmit(){
   clsModal();
-  document.getElementById('form-card').style.display='none';
-  document.getElementById('succ').classList.add('show');
-  window.scrollTo({top:0,behavior:'smooth'});
+  const btnOk=document.querySelector('.btn-ok');
+  btnOk.disabled=true; btnOk.textContent='送出中...';
+  try{
+    const data=collect();
+    const res=await fetch(GAS_URL,{method:'POST',body:JSON.stringify(data)});
+    const result=await res.json();
+    if(result.success){
+      document.getElementById('form-card').style.display='none';
+      document.getElementById('succ').classList.add('show');
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      alert('送出失敗，請稍後再試。');
+      btnOk.disabled=false; btnOk.textContent='確認送出審核';
+      document.getElementById('modal').classList.add('show');
+    }
+  } catch(err){
+    alert('網路錯誤：'+err.message);
+    btnOk.disabled=false; btnOk.textContent='確認送出審核';
+    document.getElementById('modal').classList.add('show');
+  }
 }
 function resetForm(){
   document.getElementById('succ').classList.remove('show');document.getElementById('form-card').style.display='';
   document.querySelectorAll('input[type=text],input[type=number],input[type=date],textarea').forEach(e=>e.value='');
   document.querySelectorAll('input[type=radio],input[type=checkbox]').forEach(e=>e.checked=false);
   document.getElementById('cc').value='';document.getElementById('dept-other-field').style.display='none';
+  if(document.getElementById('applicant-email')) document.getElementById('applicant-email').value='';
   document.getElementById('amt-k').textContent='—';document.getElementById('ntd-eq').textContent='—';
   document.getElementById('er-row').classList.remove('show');document.getElementById('cur').value='NTD';
   document.getElementById('inv-f').classList.remove('show');
