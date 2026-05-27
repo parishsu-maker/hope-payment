@@ -3,13 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>元木運動行銷 — 請款單</title>
+<title>元木運動行銷 — 請款系統</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ac:#1a4a2e;--r:6px;}
+/* ══════════════════════════════════════
+   共用
+══════════════════════════════════════ */
+:root{--ac:#1a4a2e;--acl:#e8f0eb;--r:6px;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh;padding:2rem 1rem 4rem;}
+body{font-family:'Noto Sans TC',sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh;}
+
+/* ── TOP NAV ── */
+.top-nav{background:#1a4a2e;color:#fff;padding:.7rem 1.6rem;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{font-family:'Noto Serif TC',serif;font-size:.95rem;font-weight:600;letter-spacing:.08em;}
+.nav-right{display:flex;align-items:center;gap:.8rem;}
+.nav-badge{font-size:.7rem;opacity:.7;}
+.btn-dashboard{padding:.32rem .85rem;border:1px solid rgba(255,255,255,.5);border-radius:20px;background:transparent;color:#fff;font-family:inherit;font-size:.75rem;cursor:pointer;transition:background .12s;}
+.btn-dashboard:hover{background:rgba(255,255,255,.15);}
+.btn-dashboard.active{background:#fff;color:#1a4a2e;font-weight:500;border-color:#fff;}
+.btn-logout{padding:.32rem .75rem;border:none;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;font-family:inherit;font-size:.75rem;cursor:pointer;display:none;}
+.btn-logout:hover{background:rgba(255,255,255,.25);}
+.btn-logout.show{display:inline-block;}
+
+/* ══════════════════════════════════════
+   請款表單
+══════════════════════════════════════ */
+#form-view{padding:1.8rem 1rem 4rem;}
 .wrap{max-width:860px;margin:0 auto;}
 .ph{text-align:center;margin-bottom:2rem;}
 .ph .co{font-family:'Noto Serif TC',serif;font-size:1.6rem;font-weight:600;letter-spacing:.12em;}
@@ -21,6 +41,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f5f4f0;color:#1a1a18;min-
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.2rem;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem 1.2rem;}
 .s2{grid-column:span 2;}
+.s3{grid-column:span 3;}
 .fl{display:flex;flex-direction:column;gap:.3rem;}
 .fl label{font-size:.74rem;font-weight:500;color:#4a4a45;}
 .req{color:#c0392b;margin-left:2px;}
@@ -63,7 +84,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .fn{font-size:.74rem;color:#8a8a82;line-height:1.6;}
 .bs{padding:.65rem 2rem;background:#1a4a2e;color:#fff;border:none;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:.92rem;font-weight:500;letter-spacing:.04em;cursor:pointer;transition:background .12s;}
 .bs:hover{background:#133d24;}
-/* Modal */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(10,10,8,.5);z-index:100;align-items:center;justify-content:center;padding:1rem;}
 .modal-bg.show{display:flex;}
 .modal{background:#fff;border-radius:10px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
@@ -75,22 +95,110 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .ma{margin-top:1.2rem;display:flex;gap:.7rem;justify-content:flex-end;}
 .btn-back{padding:.55rem 1.2rem;border:1px solid #d4d0c8;border-radius:var(--r);background:#fff;color:#4a4a45;font-family:'Noto Sans TC',sans-serif;font-size:.86rem;cursor:pointer;}
 .btn-ok{padding:.55rem 1.6rem;background:#1a4a2e;color:#fff;border:none;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;}
-/* Success */
 .succ{display:none;text-align:center;padding:3rem 1rem;}
 .succ.show{display:block;}
 .si{width:56px;height:56px;background:#e8f0eb;border-radius:50%;margin:0 auto .9rem;display:flex;align-items:center;justify-content:center;}
 .st{font-family:'Noto Serif TC',serif;font-size:1.15rem;font-weight:600;color:#1a1a18;margin-bottom:.5rem;}
 .ss{font-size:.86rem;color:#4a4a45;line-height:1.75;}
+
+/* ══════════════════════════════════════
+   財務後台
+══════════════════════════════════════ */
+#dash-view{display:none;padding:1.6rem;}
+.page-title{font-family:'Noto Serif TC',serif;font-size:1.15rem;font-weight:600;margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem;}
+.page-title span{font-size:.75rem;font-weight:400;color:#8a8a82;font-family:'Noto Sans TC',sans-serif;}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-bottom:1.4rem;}
+.stat-card{background:#fff;border:1px solid #d4d0c8;border-radius:8px;padding:.9rem 1rem;}
+.stat-label{font-size:.7rem;color:#8a8a82;margin-bottom:.3rem;}
+.stat-value{font-size:1.5rem;font-weight:600;color:#1a4a2e;}
+.stat-value.amber{color:#b45309;}
+.stat-value.gray{color:#4a4a45;}
+.filters{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
+.filter-btn{padding:.35rem .9rem;border:1px solid #d4d0c8;border-radius:20px;background:#fff;font-family:inherit;font-size:.78rem;color:#4a4a45;cursor:pointer;transition:all .12s;}
+.filter-btn.active{background:#1a4a2e;border-color:#1a4a2e;color:#fff;font-weight:500;}
+.search-input{padding:.38rem .75rem;border:1px solid #d4d0c8;border-radius:20px;font-family:inherit;font-size:.78rem;outline:none;width:180px;}
+.search-input:focus{border-color:#1a4a2e;}
+.refresh-btn{padding:.35rem .9rem;border:1px solid #d4d0c8;border-radius:20px;background:#fff;font-family:inherit;font-size:.78rem;color:#4a4a45;cursor:pointer;margin-left:auto;}
+.refresh-btn:hover{border-color:#1a4a2e;color:#1a4a2e;}
+.table-wrap{background:#fff;border:1px solid #d4d0c8;border-radius:8px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.04);}
+.records-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.records-table th{background:#1a4a2e;color:#fff;padding:.6rem .8rem;text-align:left;font-weight:500;font-size:.72rem;letter-spacing:.04em;white-space:nowrap;}
+.records-table td{padding:.65rem .8rem;border-bottom:1px solid #eceae4;vertical-align:middle;}
+.records-table tr:last-child td{border-bottom:none;}
+.records-table tr:hover td{background:#faf9f6;}
+.records-table .rno{font-weight:500;color:#1a4a2e;white-space:nowrap;}
+.records-table .ramt{font-weight:600;white-space:nowrap;}
+.records-table .rcontent{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4a4a45;}
+.rbadge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:500;white-space:nowrap;}
+.rb-done{background:#e8f0eb;color:#1a4a2e;}
+.rb-boss{background:#fef3e2;color:#b45309;}
+.rb-fin{background:#eff6ff;color:#1d4ed8;}
+.rb-wait{background:#f3f4f6;color:#6b7280;}
+.action-btns{display:flex;gap:.4rem;flex-wrap:wrap;}
+.btn-pdf{padding:.28rem .65rem;background:#1a4a2e;color:#fff !important;border:none;border-radius:4px;font-family:inherit;font-size:.72rem;cursor:pointer;white-space:nowrap;text-decoration:none !important;display:inline-block;}
+.btn-pdf:hover{background:#133d24;}
+.btn-detail{padding:.28rem .65rem;background:#fff;color:#4a4a45;border:1px solid #d4d0c8;border-radius:4px;font-family:inherit;font-size:.72rem;cursor:pointer;}
+.btn-detail:hover{border-color:#1a4a2e;color:#1a4a2e;}
+.d-loading{text-align:center;padding:3rem;color:#8a8a82;font-size:.88rem;}
+.d-spin{display:inline-block;width:22px;height:22px;border:2px solid #eceae4;border-top-color:#1a4a2e;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:.5rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.d-empty{text-align:center;padding:3rem;color:#8a8a82;font-size:.88rem;}
+.detail-table{width:100%;border-collapse:collapse;font-size:.84rem;}
+.detail-table td{padding:.5rem .6rem;border-bottom:1px solid #eceae4;vertical-align:top;}
+.detail-table td:first-child{width:110px;color:#8a8a82;font-size:.76rem;white-space:nowrap;}
+.detail-sec{font-size:.68rem;font-weight:600;color:#1a4a2e;letter-spacing:.12em;text-transform:uppercase;padding:.6rem .6rem .3rem;background:#f5f4f0;border-bottom:1px solid #eceae4;}
+
+/* ── 登入 overlay ── */
+.dash-login-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,8,.5);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.dash-login-overlay.show{display:flex;}
+.dash-login-card{background:#fff;border-radius:10px;padding:2rem 1.8rem;width:100%;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.dash-login-title{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:600;text-align:center;margin-bottom:.3rem;}
+.dash-login-sub{font-size:.76rem;color:#8a8a82;text-align:center;margin-bottom:1.4rem;}
+.dash-login-card .fl{margin-bottom:.9rem;}
+.dash-login-card input{padding:.5rem .75rem;border:1px solid #d4d0c8;border-radius:var(--r);font-family:inherit;font-size:.88rem;width:100%;outline:none;}
+.dash-login-card input:focus{border-color:#1a4a2e;box-shadow:0 0 0 3px rgba(26,74,46,.1);}
+.dash-login-btn{width:100%;padding:.6rem;background:#1a4a2e;color:#fff;border:none;border-radius:var(--r);font-family:inherit;font-size:.88rem;font-weight:500;cursor:pointer;}
+.dash-login-err{font-size:.74rem;color:#c0392b;text-align:center;margin-top:.5rem;display:none;}
+.dash-login-err.show{display:block;}
+.dash-login-cancel{width:100%;padding:.5rem;background:transparent;color:#8a8a82;border:none;font-family:inherit;font-size:.8rem;cursor:pointer;margin-top:.4rem;}
+
+/* 詳情 modal（後台用） */
+.dmodal-bg{display:none;position:fixed;inset:0;background:rgba(10,10,8,.5);z-index:150;align-items:center;justify-content:center;padding:1rem;}
+.dmodal-bg.show{display:flex;}
+.dmodal{background:#fff;border-radius:10px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.dmodal-head{background:#1a4a2e;color:#fff;padding:.75rem 1.4rem;font-size:.9rem;font-weight:500;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;}
+.dmodal-close{background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;opacity:.8;}
+.dmodal-close:hover{opacity:1;}
+.dmodal-body{padding:1.4rem;}
+.dmodal-footer{padding:.8rem 1.4rem;border-top:1px solid #eceae4;display:flex;gap:.6rem;justify-content:flex-end;}
+
 @media(max-width:600px){
-  .sec-body{padding:1rem 1rem;}
+  #form-view{padding:1rem .6rem 3rem;}
   .g2,.g3{grid-template-columns:1fr;}
-  .s2{grid-column:span 1;}
+  .s2,.s3{grid-column:span 1;}
   .ff{flex-direction:column;}
   .bs{width:100%;text-align:center;}
+  #dash-view{padding:1rem .6rem;}
+  .records-table th:nth-child(n+5),.records-table td:nth-child(n+5){display:none;}
 }
 </style>
 </head>
 <body>
+
+<!-- ── TOP NAV ── -->
+<div class="top-nav">
+  <div class="nav-brand">元木運動行銷有限公司</div>
+  <div class="nav-right">
+    <span class="nav-badge" id="nav-badge">請款申請系統</span>
+    <button class="btn-dashboard" id="btn-dash" onclick="openDashLogin()">財務後台</button>
+    <button class="btn-logout" id="btn-logout" onclick="doLogout()">登出後台</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     請款表單
+══════════════════════════════════════ -->
+<div id="form-view">
 <div class="wrap">
 <div class="ph">
   <div class="co">元木運動行銷有限公司</div>
@@ -99,7 +207,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 </div>
 
 <div class="card" id="form-card">
-
   <div class="sec-head">基本資訊</div>
   <div class="sec-body">
     <div class="g2" style="margin-bottom:.8rem;">
@@ -206,7 +313,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   </div>
 </div>
 
-<!-- Modal -->
+<!-- 預覽 Modal -->
 <div class="modal-bg" id="modal">
   <div class="modal">
     <div class="modal-head">確認請款單內容</div>
@@ -220,16 +327,141 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   </div>
 </div>
 
-<!-- Success -->
+<!-- 成功 -->
 <div class="succ" id="succ">
   <div class="si"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
   <div class="st">請款單已送出</div>
   <div class="ss">系統已自動通知核准及經辦人進行線上簽核。<br>簽核完成後您將收到 Email 通知。</div>
   <button class="bs" style="margin-top:1.4rem;" onclick="resetForm()">填寫新的請款單</button>
 </div>
+</div><!-- /wrap -->
+</div><!-- /form-view -->
+
+<!-- ══════════════════════════════════════
+     財務後台
+══════════════════════════════════════ -->
+<div id="dash-view">
+  <div class="page-title">請款記錄總覽 <span id="last-update"></span></div>
+  <div class="stats">
+    <div class="stat-card"><div class="stat-label">全部請款</div><div class="stat-value gray" id="stat-total">—</div></div>
+    <div class="stat-card"><div class="stat-label">待老闆簽核</div><div class="stat-value amber" id="stat-boss">—</div></div>
+    <div class="stat-card"><div class="stat-label">待財務簽核</div><div class="stat-value amber" id="stat-fin">—</div></div>
+    <div class="stat-card"><div class="stat-label">已完成</div><div class="stat-value" id="stat-done">—</div></div>
+    <div class="stat-card"><div class="stat-label">本月請款總額</div><div class="stat-value" id="stat-amt">—</div></div>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
+    <button class="filter-btn" onclick="setFilter('boss',this)">待老闆</button>
+    <button class="filter-btn" onclick="setFilter('finance',this)">待財務</button>
+    <button class="filter-btn" onclick="setFilter('done',this)">已完成</button>
+    <button class="filter-btn" onclick="setFilter('pdf',this)">有PDF</button>
+    <input class="search-input" type="text" id="search-input" placeholder="搜尋單號 / 申請人 / 廠商" oninput="renderTable()">
+    <button class="refresh-btn" onclick="loadDash()">↻ 重新整理</button>
+  </div>
+  <div class="table-wrap">
+    <div class="d-loading" id="d-loading"><div class="d-spin"></div><br>載入中...</div>
+    <div id="d-table" style="display:none;">
+      <table class="records-table">
+        <thead><tr>
+          <th>單號</th><th>請款日期</th><th>申請人</th><th>廠商</th>
+          <th>金額</th><th>付款內容</th><th>老闆</th><th>財務</th><th>動作</th>
+        </tr></thead>
+        <tbody id="d-tbody"></tbody>
+      </table>
+      <div class="d-empty" id="d-empty" style="display:none;">沒有符合條件的記錄</div>
+    </div>
+  </div>
+</div>
+
+<!-- 後台詳情 Modal -->
+<div class="dmodal-bg" id="dmodal">
+  <div class="dmodal">
+    <div class="dmodal-head">
+      <span id="dmodal-title">請款單詳情</span>
+      <button class="dmodal-close" onclick="closeDModal()">✕</button>
+    </div>
+    <div class="dmodal-body" id="dmodal-body"></div>
+    <div class="dmodal-footer">
+      <button class="btn-back" onclick="closeDModal()">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- 後台登入 overlay -->
+<div class="dash-login-overlay" id="dash-login">
+  <div class="dash-login-card">
+    <div class="dash-login-title">財務後台</div>
+    <div class="dash-login-sub">請輸入密碼登入</div>
+    <div class="fl"><label>密碼</label><input type="password" id="dash-pwd" placeholder="請輸入密碼" onkeydown="if(event.key==='Enter')dashLogin()"></div>
+    <button class="dash-login-btn" onclick="dashLogin()">登入</button>
+    <div class="dash-login-err" id="dash-err">密碼錯誤，請再試一次</div>
+    <button class="dash-login-cancel" onclick="closeDashLogin()">取消</button>
+  </div>
 </div>
 
 <script>
+// ══════════════════════════════════════
+//  設定
+// ══════════════════════════════════════
+const GAS_URL      = 'https://script.google.com/macros/s/AKfycbxCjPLB6D7-xHwMH2jHSBAPvHt919RwBZnZYzRRjpep4pQmK0Hrwz33beb7_aVc233OdQ/exec';
+const DASH_PASSWORD = 'yuanmu2025';  // ← 可修改
+const SHEET_CSV     = 'https://docs.google.com/spreadsheets/d/1j4719MnjGeOqNc23acAThAPJrMtKBKYEJDfBp954Mts/gviz/tq?tqx=out:csv&sheet=請款記錄';
+
+// ══════════════════════════════════════
+//  頁面切換
+// ══════════════════════════════════════
+let isLoggedIn = false;
+let currentFilter = 'all';
+let allRecords = [];
+
+function openDashLogin() {
+  if (isLoggedIn) { showDash(); return; }
+  document.getElementById('dash-login').classList.add('show');
+  setTimeout(() => document.getElementById('dash-pwd').focus(), 100);
+}
+function closeDashLogin() {
+  document.getElementById('dash-login').classList.remove('show');
+  document.getElementById('dash-err').classList.remove('show');
+  document.getElementById('dash-pwd').value = '';
+}
+function dashLogin() {
+  const pwd = document.getElementById('dash-pwd').value;
+  if (pwd === DASH_PASSWORD) {
+    isLoggedIn = true;
+    closeDashLogin();
+    showDash();
+  } else {
+    document.getElementById('dash-err').classList.add('show');
+    document.getElementById('dash-pwd').value = '';
+  }
+}
+function showDash() {
+  document.getElementById('form-view').style.display = 'none';
+  document.getElementById('dash-view').style.display = 'block';
+  document.getElementById('btn-dash').classList.add('active');
+  document.getElementById('btn-dash').textContent = '請款申請';
+  document.getElementById('btn-dash').onclick = showForm;
+  document.getElementById('btn-logout').classList.add('show');
+  document.getElementById('nav-badge').textContent = '財務後台';
+  loadDash();
+}
+function showForm() {
+  document.getElementById('dash-view').style.display = 'none';
+  document.getElementById('form-view').style.display = 'block';
+  document.getElementById('btn-dash').classList.remove('active');
+  document.getElementById('btn-dash').textContent = '財務後台';
+  document.getElementById('btn-dash').onclick = openDashLogin;
+  document.getElementById('nav-badge').textContent = '請款申請系統';
+}
+function doLogout() {
+  isLoggedIn = false;
+  document.getElementById('btn-logout').classList.remove('show');
+  showForm();
+}
+
+// ══════════════════════════════════════
+//  請款表單 JS
+// ══════════════════════════════════════
 const BANKS=[
   {n:'台灣銀行',c:'004'},{n:'土地銀行',c:'005'},{n:'合作金庫',c:'006'},
   {n:'第一銀行',c:'007'},{n:'華南銀行',c:'008'},{n:'彰化銀行',c:'009'},
@@ -251,6 +483,7 @@ const BANKS=[
   document.getElementById('doc-dt').textContent=`${y} 年 ${m} 月 ${d} 日`;
   document.getElementById('doc-no').textContent=`YM${y}${m}${d}-${String(Math.floor(Math.random()*900)+100)}`;
 })();
+
 function togDeptOther(v){document.getElementById('dept-other-field').style.display=(v==='其他')?'flex':'none';}
 function onBankChange(code){
   const sel=document.getElementById('bk-name');const opt=sel.options[sel.selectedIndex];const el=document.getElementById('bk-code');
@@ -285,10 +518,6 @@ function setPM(t){
 function togInv(s){document.getElementById('inv-f').classList.toggle('show',s);}
 function getPT(){return document.querySelector('input[name="pt"]:checked')?.value||'—';}
 function getDept(){const v=document.getElementById('cc').value;if(v==='其他'){const o=document.getElementById('dept-other').value.trim();return o||'其他';}return v;}
-// ── GAS 端點（部署後填入）──────────────────────────────────
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxCjPLB6D7-xHwMH2jHSBAPvHt919RwBZnZYzRRjpep4pQmK0Hrwz33beb7_aVc233OdQ/exec';
-// ────────────────────────────────────────────────────────────
-
 function vld(){
   let ok=true;
   const ccSel=document.getElementById('cc');const ccF=ccSel.closest('.fl');
@@ -347,11 +576,9 @@ function prev(){
   if(!vld())return;
   const d=collect();
   const rows=[
-    ['單號',d.no],['請款日期',d.dt],
-    ['公司部門',d.dept],['申請人',d.applicant],['請款類別',d.rt||'—'],
-    ['廠商全名',d.vd],['付款類別',d.pt],['收款方式',d.pmInfo],
-    ['付款內容',d.ct],
-    ['小寫金額',`${Number(d.amt).toLocaleString()} ${d.cur}`],
+    ['單號',d.no],['請款日期',d.dt],['公司部門',d.dept],['申請人',d.applicant],
+    ['請款類別',d.rt||'—'],['廠商全名',d.vd],['付款類別',d.pt],['收款方式',d.pmInfo],
+    ['付款內容',d.ct],['小寫金額',`${Number(d.amt).toLocaleString()} ${d.cur}`],
     ['大寫金額',d.amtK],['付款幣別',d.cur],['匯率',d.er],
     ['應付日期',d.dd||'—'],['發票日期',d.id2],['發票號碼',d.in2],['備註',d.nt],
   ];
@@ -362,40 +589,176 @@ function clsModal(){document.getElementById('modal').classList.remove('show');}
 async function doSubmit(){
   clsModal();
   const btnOk=document.querySelector('.btn-ok');
-  btnOk.disabled=true; btnOk.textContent='送出中...';
+  btnOk.disabled=true;btnOk.textContent='送出中...';
   try{
     const data=collect();
-    // GAS 需要用 no-cors 模式，送出後直接顯示成功畫面
-    fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(data),
-    });
-    // no-cors 無法讀取回應，等 800ms 後直接顯示成功
-    await new Promise(r => setTimeout(r, 800));
+    fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data)});
+    await new Promise(r=>setTimeout(r,800));
     document.getElementById('form-card').style.display='none';
     document.getElementById('succ').classList.add('show');
     window.scrollTo({top:0,behavior:'smooth'});
-  } catch(err){
+  }catch(err){
     alert('網路錯誤：'+err.message);
-    btnOk.disabled=false; btnOk.textContent='確認送出審核';
+    btnOk.disabled=false;btnOk.textContent='確認送出審核';
     document.getElementById('modal').classList.add('show');
   }
 }
 function resetForm(){
-  document.getElementById('succ').classList.remove('show');document.getElementById('form-card').style.display='';
+  document.getElementById('succ').classList.remove('show');
+  document.getElementById('form-card').style.display='';
   document.querySelectorAll('input[type=text],input[type=number],input[type=date],textarea').forEach(e=>e.value='');
   document.querySelectorAll('input[type=radio],input[type=checkbox]').forEach(e=>e.checked=false);
-  document.getElementById('cc').value='';document.getElementById('dept-other-field').style.display='none';
-  if(document.getElementById('applicant-email')) document.getElementById('applicant-email').value='';
+  document.getElementById('cc').value='';
+  if(document.getElementById('applicant-email'))document.getElementById('applicant-email').value='';
+  document.getElementById('dept-other-field').style.display='none';
   document.getElementById('amt-k').textContent='—';document.getElementById('ntd-eq').textContent='—';
   document.getElementById('er-row').classList.remove('show');document.getElementById('cur').value='NTD';
   document.getElementById('inv-f').classList.remove('show');
   document.getElementById('bk-name').selectedIndex=0;document.getElementById('bk-code').textContent='—';
   document.getElementById('bk-code').classList.remove('filled');setPM('cash');
   window.scrollTo({top:0,behavior:'smooth'});
+  const now=new Date();const y=now.getFullYear()-1911;
+  const m=String(now.getMonth()+1).padStart(2,'0');const d=String(now.getDate()).padStart(2,'0');
+  document.getElementById('doc-no').textContent=`YM${y}${m}${d}-${String(Math.floor(Math.random()*900)+100)}`;
 }
+
+// ══════════════════════════════════════
+//  財務後台 JS
+// ══════════════════════════════════════
+async function loadDash(){
+  document.getElementById('d-loading').style.display='block';
+  document.getElementById('d-table').style.display='none';
+  try{
+    const res=await fetch(SHEET_CSV+'&t='+Date.now());
+    const text=await res.text();
+    allRecords=parseCSV(text);
+    updateStats();renderTable();
+    document.getElementById('last-update').textContent='最後更新：'+new Date().toLocaleTimeString('zh-TW');
+  }catch(e){
+    document.getElementById('d-loading').innerHTML='<div style="color:#c0392b;">載入失敗，請確認 Google Sheet 共用設定</div>';
+    return;
+  }
+  document.getElementById('d-loading').style.display='none';
+  document.getElementById('d-table').style.display='block';
+}
+function parseCSV(text){
+  const lines=text.trim().split('\n');if(lines.length<2)return[];
+  const headers=parseCSVRow(lines[0]);
+  return lines.slice(1).map(line=>{
+    const vals=parseCSVRow(line);const obj={};
+    headers.forEach((h,i)=>obj[h.replace(/"/g,'')]=(vals[i]||'').replace(/"/g,''));
+    return obj;
+  });
+}
+function parseCSVRow(row){
+  const result=[];let cur='',inQ=false;
+  for(let i=0;i<row.length;i++){
+    const c=row[i];
+    if(c==='"'){inQ=!inQ;}
+    else if(c===','&&!inQ){result.push(cur);cur='';}
+    else cur+=c;
+  }
+  result.push(cur);return result;
+}
+function updateStats(){
+  const now=new Date();const month=now.getMonth();const year=now.getFullYear();
+  let boss=0,fin=0,done=0,monthAmt=0;
+  allRecords.forEach(r=>{
+    const bs=r['老闆狀態']||'';const fs=r['財務狀態']||'';
+    const isDone=['已簽核','已確認（Email）'].some(s=>bs.includes(s))&&['已簽核','已確認（Email）'].some(s=>fs.includes(s));
+    if(bs==='待老闆簽核')boss++;
+    else if(fs==='待財務簽核')fin++;
+    if(isDone)done++;
+    const d=new Date(r['提交時間']);
+    if(d.getMonth()===month&&d.getFullYear()===year){
+      const a=parseFloat((r['小寫金額']||'0').replace(/,/g,''));
+      if(!isNaN(a))monthAmt+=a;
+    }
+  });
+  document.getElementById('stat-total').textContent=allRecords.length;
+  document.getElementById('stat-boss').textContent=boss;
+  document.getElementById('stat-fin').textContent=fin;
+  document.getElementById('stat-done').textContent=done;
+  document.getElementById('stat-amt').textContent='NT$ '+Math.round(monthAmt).toLocaleString();
+}
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderTable();
+}
+function matchFilter(r){
+  const bs=r['老闆狀態']||'';const fs=r['財務狀態']||'';const pdf=r['PDF連結']||'';
+  const isDone=['已簽核','已確認（Email）'].some(s=>bs.includes(s))&&['已簽核','已確認（Email）'].some(s=>fs.includes(s));
+  if(currentFilter==='boss')return bs==='待老闆簽核';
+  if(currentFilter==='finance')return fs==='待財務簽核';
+  if(currentFilter==='done')return isDone;
+  if(currentFilter==='pdf')return!!pdf;
+  return true;
+}
+function renderTable(){
+  const q=(document.getElementById('search-input').value||'').toLowerCase();
+  const tbody=document.getElementById('d-tbody');
+  const empty=document.getElementById('d-empty');
+  const filtered=allRecords.filter(r=>{
+    if(!matchFilter(r))return false;
+    if(!q)return true;
+    return(r['單號']||'').toLowerCase().includes(q)||(r['申請人']||'').toLowerCase().includes(q)||(r['廠商全名']||'').toLowerCase().includes(q);
+  }).reverse();
+  if(filtered.length===0){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbody.innerHTML=filtered.map(r=>{
+    const bs=r['老闆狀態']||'—';const fs=r['財務狀態']||'—';
+    const pdfUrl=r['PDF連結']||'';
+    const amt=r['小寫金額']?'NT$ '+Number(r['小寫金額']).toLocaleString():'—';
+    const isDone=['已簽核','已確認（Email）'].some(s=>bs.includes(s))&&['已簽核','已確認（Email）'].some(s=>fs.includes(s));
+    const bsBadge=bs.includes('待')?'rb-boss':bs.includes('已')?'rb-done':'rb-wait';
+    const fsBadge=fs.includes('待')?'rb-fin':fs.includes('已')?'rb-done':'rb-wait';
+    const pdfBtn=pdfUrl?`<a class="btn-pdf" href="${pdfUrl}" target="_blank">📄 PDF</a>`:(isDone?'<span style="font-size:.7rem;color:#8a8a82;">產生中</span>':'');
+    return`<tr>
+      <td class="rno">${r['單號']||'—'}</td>
+      <td>${r['請款日期']||'—'}</td>
+      <td class="rapplicant">${r['申請人']||'—'}</td>
+      <td>${r['廠商全名']||'—'}</td>
+      <td class="ramt">${amt}</td>
+      <td class="rcontent" title="${r['付款內容']||''}">${r['付款內容']||'—'}</td>
+      <td><span class="rbadge ${bsBadge}">${bs}</span></td>
+      <td><span class="rbadge ${fsBadge}">${fs}</span></td>
+      <td><div class="action-btns">${pdfBtn}<button class="btn-detail" onclick='showDetail(${JSON.stringify(JSON.stringify(r))})'>詳情</button></div></td>
+    </tr>`;
+  }).join('');
+}
+function showDetail(rJson){
+  const r=JSON.parse(rJson);
+  document.getElementById('dmodal-title').textContent=`請款單 ${r['單號']||''}`;
+  const pdfUrl=r['PDF連結']||'';
+  const rows=[
+    ['請款資訊',null],
+    ['單號',r['單號']],['請款日期',r['請款日期']],
+    ['申請人',r['申請人']],['部門',r['公司部門']],
+    ['請款類別',r['請款類別']||'—'],['廠商全名',r['廠商全名']],
+    ['付款類別',r['付款類別']],['收款方式',r['收款方式']],
+    ['付款內容',r['付款內容']],
+    ['小寫金額',r['小寫金額']?`NT$ ${Number(r['小寫金額']).toLocaleString()}`:'—'],
+    ['大寫金額',r['大寫金額']||'—'],['付款幣別',r['付款幣別']||'—'],
+    ['應付日期',r['應付日期']||'—'],['發票日期',r['發票日期']||'—'],
+    ['發票號碼',r['發票號碼']||'—'],['備註',r['備註']||'—'],
+    ['簽核記錄',null],
+    ['老闆狀態',r['老闆狀態']||'—'],['老闆簽核時間',r['老闆簽核時間']||'—'],['老闆簽名方式',r['老闆簽名方式']||'—'],
+    ['財務狀態',r['財務狀態']||'—'],['財務簽核時間',r['財務簽核時間']||'—'],['財務簽名方式',r['財務簽名方式']||'—'],
+  ];
+  const tableHtml=rows.map(([k,v])=>{
+    if(v===null)return`<tr><td colspan="2" class="detail-sec">${k}</td></tr>`;
+    return`<tr><td>${k}</td><td>${v||'—'}</td></tr>`;
+  }).join('');
+  const pdfSection=pdfUrl?`<div style="margin-top:1rem;text-align:center;"><a class="btn-pdf" href="${pdfUrl}" target="_blank" style="padding:.55rem 1.4rem;font-size:.88rem;">📄 下載請款單 PDF</a></div>`:'';
+  document.getElementById('dmodal-body').innerHTML=`<table class="detail-table">${tableHtml}</table>${pdfSection}`;
+  document.getElementById('dmodal').classList.add('show');
+}
+function closeDModal(){document.getElementById('dmodal').classList.remove('show');}
+
+// 自動 10 分鐘更新
+setInterval(()=>{if(isLoggedIn)loadDash();},10*60*1000);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDModal();}});
 </script>
 </body>
 </html>
